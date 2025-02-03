@@ -19,6 +19,7 @@ public class TessellatorManager {
 
     private static final ThreadLocal<Boolean> currentlyCapturing = ThreadLocal.withInitial(() -> Boolean.FALSE);
     private static final Thread mainThread = Thread.currentThread();
+    private static int overrideShaderBlockId = -1;
 
     public static Tessellator get() {
         if (currentlyCapturing.get()) {
@@ -103,5 +104,27 @@ public class TessellatorManager {
         currentlyCapturing.set(false);
         tessellator.discard();
         tessellator.clearQuads();
+    }
+
+    public static void setOverrideShaderBlockId(int blockId) {
+        final CapturingTessellator tess = capturingTessellator.get();
+
+        // Flush queue, so we capture all blockIds
+        if (tess.isDrawing){
+            tess.draw();
+            tess.isDrawing = true;
+        }
+
+        // Now set new blockId
+        overrideShaderBlockId = blockId;
+    }
+
+    public static void clearOverrideShaderBlockId()
+    {
+        setOverrideShaderBlockId(-1);
+    }
+
+    public static int getOverrideShaderBlockId() {
+        return overrideShaderBlockId;
     }
 }

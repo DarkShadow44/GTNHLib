@@ -101,6 +101,7 @@ public class CapturingTessellator extends Tessellator implements ITessellatorIns
                     -offset.x,
                     -offset.y,
                     -offset.z);
+            quad.setShaderBlockId(TessellatorManager.getOverrideShaderBlockId());
 
             if (quad.isDeleted()) {
                 quadBuf.releaseInstance(quad);
